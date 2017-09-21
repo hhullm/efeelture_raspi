@@ -39,25 +39,26 @@ public class CtrlServlet extends HttpServlet {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Gson gson = new Gson();
-		map.put("resultCode", "999");
+		//map.put("resultCode", "999");
 
-		String url = "/home/pi/ctrl/" + hname + "/" + hname + clevel + ".sh";
+		// String url = "/home/pi/ctrl/" + hname + "/" + hname + clevel + ".sh";
 		// CtrlRW.runShell(url);
+		String url = "./WebContent/shell/hardware.sh " + hname + " " + clevel;
 		try {
 			Process process = Runtime.getRuntime().exec(url);
 			InputStreamReader ir = new InputStreamReader(process.getInputStream());
 			LineNumberReader input = new LineNumberReader(ir);
-			String line;
-			while ((line = input.readLine()) != null)
-				// System.out.println(line);
-				input.close();
+			String resultstr = "";
+			String line = "";
+			while ((line = input.readLine()) != null) {
+				resultstr = resultstr + line;
+
+			}
+			// System.out.println(line);
+			input.close();
 			ir.close();
 			map.put("resultCode", "999");
-			// String resultCode = ResultUtil.getCtrlSucceedCode();
-			// out.write(resultCode);
-
-			// read content
-			map.put("content", "null");
+			map.put("content", resultstr);
 			String resultCode = gson.toJson(map);
 			out.write(resultCode);
 		} catch (IOException e) {
